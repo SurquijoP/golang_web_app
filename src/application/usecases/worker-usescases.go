@@ -13,6 +13,7 @@ func ApplyFibonacciPerWorkers() {
 	const (
 		maxWorkers   = 4
 		maxQueueSize = 20
+		port         = ":8081"
 	)
 
 	jobQueue := make(chan Job, maxQueueSize)
@@ -23,5 +24,5 @@ func ApplyFibonacciPerWorkers() {
 	http.HandleFunc("/fib", func(w http.ResponseWriter, r *http.Request) {
 		handler.RequestHandler(w, r, jobQueue)
 	})
-	log.Fatal(http.ListenAndServe("8080", nil))
+	log.Fatal(http.ListenAndServe(port, nil))
 }
