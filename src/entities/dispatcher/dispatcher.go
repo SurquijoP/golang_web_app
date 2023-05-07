@@ -2,6 +2,7 @@ package entities
 
 import (
 	. "github.com/SurquijoP/golang_web_app/src/entities/jobs"
+	. "github.com/SurquijoP/golang_web_app/src/entities/workers"
 )
 
 type Dispatcher struct {
@@ -10,7 +11,7 @@ type Dispatcher struct {
 	JobQueue   chan Job
 }
 
-func NewWorker(jobQueue chan Job, maxWorkers int) *Dispatcher {
+func NewDisPatcher(jobQueue chan Job, maxWorkers int) *Dispatcher {
 	return &Dispatcher{WorkerPool: make(chan chan Job), JobQueue: jobQueue, MaxWorkers: maxWorkers}
 }
 
@@ -24,4 +25,12 @@ func (d *Dispatcher) Dispatch() {
 			}()
 		}
 	}
+}
+
+func (d *Dispatcher) Run() {
+	for i := 0; i < d.MaxWorkers; i++ {
+		worker := NewWorker(i, d.WorkerPool)
+		worker.Start()
+	}
+	go d.Dispatch()
 }

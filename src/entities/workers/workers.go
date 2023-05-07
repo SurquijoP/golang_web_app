@@ -38,3 +38,7 @@ func (w *Worker) Stop() {
 		w.QuitChan <- true
 	}()
 }
+
+func NewWorker(id int, workerPool chan chan Job) *Worker {
+	return &Worker{Id: id, JobQueue: make(chan Job), WorkerPool: workerPool, QuitChan: make(chan bool)}
+}
